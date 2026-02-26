@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CODEdojo — Slash Through Code Challenges</title>
+  <meta name="description" content="A new way of learning how to code and brush up on skills. Created by the CTO of Cause of a Kind.">
+  <link rel="icon" href="icon-light-32x32.png" media="(prefers-color-scheme: light)">
+  <link rel="icon" href="icon-dark-32x32.png" media="(prefers-color-scheme: dark)">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Base ────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: oklch(0.12 0.02 280);
+      --fg: oklch(0.98 0 0);
+      --card: oklch(0.16 0.02 280);
+      --primary: oklch(0.75 0.2 50);
+      --primary-fg: oklch(0.12 0.02 280);
+      --secondary: oklch(0.7 0.22 145);
+      --accent: oklch(0.65 0.25 10);
+      --muted: oklch(0.22 0.02 280);
+      --muted-fg: oklch(0.65 0 0);
+      --border: oklch(0.28 0.03 280);
+      --radius: 0.75rem;
+      --orange: #ff6b35;
+      --green: #00ff88;
+      --gold: #ffd700;
+      --red: #ff4444;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Geist', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; border: none; cursor: pointer; }
+
+    /* ── Animations ──────────────────────────────────────── */
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInLeft {
+      from { opacity: 0; transform: translateX(-50px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes fadeInScale {
+      from { opacity: 0; transform: scale(0.8); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 0.4; transform: scale(1); }
+      50%      { opacity: 0.7; transform: scale(1.05); }
+    }
+    @keyframes badge-pulse {
+      0%, 100% { transform: scale(1); }
+      50%      { transform: scale(1.05); }
+    }
+    @keyframes scroll-bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%      { transform: translateX(-50%) translateY(10px); }
+    }
+    @keyframes scroll-dot {
+      0%, 100% { transform: translateY(0); opacity: 1; }
+      50%      { transform: translateY(12px); opacity: 0.5; }
+    }
+    @keyframes katana-swing {
+      0%, 100% { transform: rotate(-5deg); }
+      50%      { transform: rotate(5deg); }
+    }
+    @keyframes code-sym-1 {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50%      { transform: translateY(-10px); opacity: 1; }
+    }
+    @keyframes code-sym-2 {
+      0%, 100% { transform: translateY(0); opacity: 0.5; }
+      50%      { transform: translateY(-10px); opacity: 1; }
+    }
+    @keyframes snippet-float {
+      0%   { opacity: 0; transform: translateY(50px) scale(0); }
+      20%  { opacity: 1; transform: translateY(0) scale(1.1); }
+      50%  { opacity: 1; transform: translateY(-10px) scale(1); }
+      80%  { opacity: 0.8; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(50px) scale(0); }
+    }
+    @keyframes snippet-sliced {
+      0%   { opacity: 0; transform: translateY(50px) scale(0) rotate(0deg); }
+      20%  { opacity: 1; transform: translateY(0) scale(1.2) rotate(0deg); }
+      50%  { opacity: 1; transform: translateY(-20px) scale(1) rotate(15deg); }
+      100% { opacity: 0; transform: translateY(-50px) scale(0) rotate(30deg); }
+    }
+    @keyframes slash-draw {
+      0%   { opacity: 0; transform: rotate(-45deg) scale(0); }
+      25%  { opacity: 1; transform: rotate(-45deg) scale(1.2); }
+      50%  { opacity: 1; transform: rotate(-45deg) scale(1); }
+      100% { opacity: 0; transform: rotate(-45deg) scale(0.8); }
+    }
+    @keyframes slash-path {
+      0%, 100% { stroke-dashoffset: 200; }
+      30%, 70% { stroke-dashoffset: 0; }
+    }
+    @keyframes sparkle {
+      0%, 100% { transform: scale(0); opacity: 0; }
+      50%      { transform: scale(1.5); opacity: 1; }
+    }
+    @keyframes sword-wobble {
+      0%, 100% { transform: rotate(0deg); }
+      25%      { transform: rotate(5deg); }
+      75%      { transform: rotate(-5deg); }
+    }
+
+    /* Scroll-triggered fade-in */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Background Orbs ─────────────────────────────────── */
+    .bg-orbs {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .bg-orbs .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      animation: pulse-glow 4s ease-in-out infinite;
+    }
+    .bg-orbs .orb-1 { top: 25%; left: 25%; width: 24rem; height: 24rem; background: oklch(0.75 0.2 50 / 0.1); }
+    .bg-orbs .orb-2 { bottom: 25%; right: 25%; width: 20rem; height: 20rem; background: oklch(0.7 0.22 145 / 0.1); animation-delay: 1s; }
+    .bg-orbs .orb-3 { top: 50%; right: 33%; width: 16rem; height: 16rem; background: oklch(0.65 0.25 10 / 0.1); animation-delay: 2s; }
+
+    /* ── Navigation ──────────────────────────────────────── */
+    .nav {
+      position: relative;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      animation: fadeInDown 0.5s ease both;
+    }
+    @media (min-width: 768px) { .nav { padding: 1rem 3rem; } }
+    @media (min-width: 1024px) { .nav { padding: 1rem 5rem; } }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius);
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.5s ease;
+    }
+    .logo-icon:hover { transform: rotate(360deg) scale(1.1); }
+    .logo-icon svg { width: 1.5rem; height: 1.5rem; color: var(--primary-fg); }
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+    @media (min-width: 768px) { .logo-text { font-size: 1.5rem; } }
+    .logo-text .accent { color: var(--primary); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.625rem 1.25rem;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 0.875rem;
+      transition: all 0.3s ease;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--primary-fg);
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+    .btn-primary svg { width: 1rem; height: 1rem; }
+
+    .btn-hero {
+      font-size: 1.125rem;
+      padding: 0.875rem 2rem;
+      border-radius: calc(var(--radius) + 4px);
+      box-shadow: 0 8px 24px oklch(0.75 0.2 50 / 0.3);
+    }
+    .btn-hero:hover { box-shadow: 0 8px 32px oklch(0.75 0.2 50 / 0.5); }
+
+    .btn-cta {
+      font-size: 1.125rem;
+      padding: 1rem 2.5rem;
+      border-radius: calc(var(--radius) + 4px);
+      box-shadow: 0 8px 24px oklch(0.75 0.2 50 / 0.3);
+    }
+    .btn-cta:hover { box-shadow: 0 8px 32px oklch(0.75 0.2 50 / 0.5); }
+    .btn-cta svg { width: 1.5rem; height: 1.5rem; }
+
+    /* ── Hero ────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+    @media (min-width: 768px) { .hero { padding: 2rem 3rem; } }
+    @media (min-width: 1024px) { .hero { padding: 2rem 5rem; } }
+
+    .hero-inner {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3rem;
+      max-width: 80rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+    @media (min-width: 1024px) {
+      .hero-inner {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+    }
+
+    .hero-content {
+      flex: 1;
+      text-align: center;
+      animation: fadeInLeft 0.6s ease both;
+    }
+    @media (min-width: 1024px) { .hero-content { text-align: left; } }
+
+    .hero-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      background: oklch(0.75 0.2 50 / 0.2);
+      color: var(--primary);
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      animation: badge-pulse 2s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-size: 2.25rem;
+      font-weight: 900;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      text-wrap: balance;
+    }
+    @media (min-width: 768px) { .hero h1 { font-size: 3.75rem; } }
+    @media (min-width: 1024px) { .hero h1 { font-size: 4.5rem; } }
+
+    .hero h1 .gradient {
+      background: linear-gradient(to right, var(--primary), var(--accent), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 1.125rem;
+      color: var(--muted-fg);
+      margin-bottom: 2rem;
+      max-width: 36rem;
+      line-height: 1.7;
+    }
+    @media (min-width: 768px) { .hero-desc { font-size: 1.25rem; } }
+    @media (min-width: 1024px) { .hero-desc { margin-left: 0; margin-right: auto; } }
+    .hero-desc:not(:last-child) { margin-left: auto; margin-right: auto; }
+    @media (min-width: 1024px) { .hero-desc { margin-left: 0; } }
+
+    .hero-cta {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      justify-content: center;
+    }
+    @media (min-width: 640px) { .hero-cta { flex-direction: row; } }
+    @media (min-width: 1024px) { .hero-cta { justify-content: flex-start; } }
+
+    .hero-ninja {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      animation: fadeInScale 0.6s ease 0.3s both;
+    }
+
+    .ninja-wrapper {
+      width: 16rem;
+      height: 16rem;
+      animation: float 2s ease-in-out infinite;
+      filter: drop-shadow(0 25px 25px rgba(0,0,0,0.5));
+    }
+    @media (min-width: 768px) {
+      .ninja-wrapper { width: 20rem; height: 20rem; }
+    }
+    .ninja-wrapper svg { width: 100%; height: 100%; }
+
+    .ninja-katana {
+      transform-origin: 160px 110px;
+      animation: katana-swing 0.5s ease-in-out infinite;
+    }
+    .ninja-code-1 { animation: code-sym-1 2s ease-in-out infinite; }
+    .ninja-code-2 { animation: code-sym-2 1.5s ease-in-out infinite 0.5s; }
+
+    /* ── Floating Code Snippets ──────────────────────────── */
+    .code-snippet {
+      position: absolute;
+      font-family: 'Geist Mono', ui-monospace, monospace;
+      font-weight: 700;
+      font-size: 1rem;
+      pointer-events: none;
+      z-index: 5;
+    }
+    @media (min-width: 768px) { .code-snippet { font-size: 1.25rem; } }
+
+    .code-snippet .pill {
+      padding: 0.5rem 1rem;
+      border-radius: calc(var(--radius) + 4px);
+      backdrop-filter: blur(4px);
+      position: relative;
+      overflow: hidden;
+    }
+    .code-snippet .slice-line {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 2px;
+      transform: rotate(-12deg);
+    }
+
+    .snippet-1 { left: 5%; top: 15%; animation: snippet-sliced 2.5s ease-out infinite; }
+    .snippet-2 { left: 80%; top: 20%; animation: snippet-float 3s ease-out infinite 0.5s; }
+    .snippet-3 { left: 15%; top: 70%; animation: snippet-sliced 2.5s ease-out infinite 1s; }
+    .snippet-4 { left: 75%; top: 65%; animation: snippet-float 3s ease-out infinite 1.5s; }
+    .snippet-5 { left: 10%; top: 45%; animation: snippet-sliced 2.5s ease-out infinite 2s; }
+    .snippet-6 { left: 85%; top: 45%; animation: snippet-float 3s ease-out infinite 2.5s; }
+
+    /* Hide some snippets on small screens to reduce clutter */
+    @media (max-width: 767px) {
+      .snippet-2, .snippet-4, .snippet-6 { display: none; }
+    }
+
+    /* ── Slash Effects ───────────────────────────────────── */
+    .slash-effect {
+      position: absolute;
+      pointer-events: none;
+      z-index: 4;
+    }
+    .slash-effect svg {
+      width: 120px;
+      height: 40px;
+    }
+    .slash-1 { top: 25%; left: 25%; animation: slash-draw 2s ease-out infinite; }
+    .slash-2 { top: 33%; right: 25%; animation: slash-draw 2s ease-out infinite 1s; }
+    .slash-3 { bottom: 33%; left: 33%; animation: slash-draw 2s ease-out infinite 2s; }
+    .slash-effect .slash-path {
+      stroke-dasharray: 200;
+      animation: slash-path 2s ease-in-out infinite;
+    }
+    .slash-1 .slash-path { animation-delay: 0s; }
+    .slash-2 .slash-path { animation-delay: 1s; }
+    .slash-3 .slash-path { animation-delay: 2s; }
+    .slash-1 .sparkle-1 { animation: sparkle 2s ease infinite 0.3s; }
+    .slash-1 .sparkle-2 { animation: sparkle 2s ease infinite 0.5s; }
+    .slash-2 .sparkle-1 { animation: sparkle 2s ease infinite 1.3s; }
+    .slash-2 .sparkle-2 { animation: sparkle 2s ease infinite 1.5s; }
+    .slash-3 .sparkle-1 { animation: sparkle 2s ease infinite 2.3s; }
+    .slash-3 .sparkle-2 { animation: sparkle 2s ease infinite 2.5s; }
+
+    @media (max-width: 767px) {
+      .slash-effect { display: none; }
+    }
+
+    /* ── Scroll Indicator ────────────────────────────────── */
+    .scroll-indicator {
+      position: absolute;
+      bottom: 2rem;
+      left: 50%;
+      animation: scroll-bounce 1.5s ease-in-out infinite;
+      z-index: 10;
+    }
+    .scroll-pill {
+      width: 1.5rem;
+      height: 2.5rem;
+      border-radius: 9999px;
+      border: 2px solid oklch(0.65 0 0 / 0.5);
+      display: flex;
+      justify-content: center;
+      padding-top: 0.5rem;
+    }
+    .scroll-dot {
+      width: 0.375rem;
+      height: 0.75rem;
+      border-radius: 9999px;
+      background: var(--primary);
+      animation: scroll-dot 1.5s ease-in-out infinite;
+    }
+
+    /* ── Stats Section ───────────────────────────────────── */
+    .stats {
+      position: relative;
+      z-index: 10;
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 768px) { .stats { padding: 5rem 3rem; } }
+    @media (min-width: 1024px) { .stats { padding: 5rem 5rem; } }
+
+    .stats-grid {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .stats-grid { grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+    }
+
+    .stat-card {
+      text-align: center;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    .stat-card:hover { transform: scale(1.05); }
+    .stat-value {
+      font-size: 1.875rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    @media (min-width: 768px) { .stat-value { font-size: 2.25rem; } }
+    @media (min-width: 1024px) { .stat-value { font-size: 3rem; } }
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+    }
+    @media (min-width: 768px) { .stat-label { font-size: 1rem; } }
+
+    /* ── Features Section ────────────────────────────────── */
+    .features {
+      position: relative;
+      z-index: 10;
+      padding: 5rem 1.5rem;
+    }
+    @media (min-width: 768px) { .features { padding: 5rem 3rem; } }
+    @media (min-width: 1024px) { .features { padding: 5rem 5rem; } }
+
+    .features-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+    .features-header h2 {
+      font-size: 1.875rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-wrap: balance;
+    }
+    @media (min-width: 768px) { .features-header h2 { font-size: 2.25rem; } }
+    @media (min-width: 1024px) { .features-header h2 { font-size: 3rem; } }
+    .features-header h2 .accent { color: var(--primary); }
+    .features-header p {
+      font-size: 1.125rem;
+      color: var(--muted-fg);
+      max-width: 42rem;
+      margin: 0 auto;
+    }
+
+    .features-grid {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: grid;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) { .features-grid { grid-template-columns: repeat(2, 1fr); gap: 2rem; } }
+    @media (min-width: 1024px) { .features-grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .feature-card {
+      position: relative;
+    }
+    .feature-card .glow {
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      filter: blur(20px);
+      pointer-events: none;
+    }
+    .feature-card:hover .glow { opacity: 1; }
+    .feature-card .card-inner {
+      position: relative;
+      padding: 1.5rem;
+      border-radius: 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(4px);
+      transition: border-color 0.3s ease;
+    }
+    @media (min-width: 768px) { .feature-card .card-inner { padding: 2rem; } }
+    .feature-card:hover .card-inner { border-color: oklch(0.75 0.2 50 / 0.5); }
+
+    .feature-icon {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: calc(var(--radius) + 4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      transition: transform 0.3s ease;
+    }
+    .feature-card:hover .feature-icon { transform: scale(1.1) rotate(5deg); }
+    .feature-icon svg { width: 1.75rem; height: 1.75rem; }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .feature-card p {
+      color: var(--muted-fg);
+      line-height: 1.7;
+    }
+
+    /* ── CTA Section ─────────────────────────────────────── */
+    .cta-section {
+      position: relative;
+      z-index: 10;
+      padding: 6rem 1.5rem;
+    }
+    @media (min-width: 768px) { .cta-section { padding: 6rem 3rem; } }
+    @media (min-width: 1024px) { .cta-section { padding: 6rem 5rem; } }
+
+    .cta-box {
+      max-width: 56rem;
+      margin: 0 auto;
+      text-align: center;
+      padding: 2rem;
+      border-radius: 1.5rem;
+      background: linear-gradient(135deg, var(--card), var(--muted));
+      border: 1px solid var(--border);
+      position: relative;
+      overflow: hidden;
+    }
+    @media (min-width: 768px) { .cta-box { padding: 4rem; } }
+
+    .cta-slash {
+      position: absolute;
+      height: 2px;
+      border-radius: 1px;
+    }
+    .cta-slash-1 { top: 1rem; left: 1rem; width: 5rem; background: oklch(0.75 0.2 50 / 0.5); transform: rotate(-45deg); }
+    .cta-slash-2 { top: 2rem; left: 2rem; width: 4rem; background: oklch(0.7 0.22 145 / 0.5); transform: rotate(-45deg); }
+    .cta-slash-3 { bottom: 1rem; right: 1rem; width: 5rem; background: oklch(0.65 0.25 10 / 0.5); transform: rotate(45deg); }
+    .cta-slash-4 { bottom: 2rem; right: 2rem; width: 4rem; background: oklch(0.75 0.2 50 / 0.5); transform: rotate(45deg); }
+
+    .cta-sword-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 5rem;
+      height: 5rem;
+      border-radius: 1rem;
+      background: oklch(0.75 0.2 50 / 0.2);
+      margin-bottom: 1.5rem;
+      animation: sword-wobble 4s ease-in-out infinite;
+    }
+    .cta-sword-icon svg { width: 2.5rem; height: 2.5rem; color: var(--primary); }
+
+    .cta-box h2 {
+      font-size: 1.875rem;
+      font-weight: 900;
+      margin-bottom: 1rem;
+      text-wrap: balance;
+    }
+    @media (min-width: 768px) { .cta-box h2 { font-size: 2.25rem; } }
+    @media (min-width: 1024px) { .cta-box h2 { font-size: 3rem; } }
+
+    .cta-box > p {
+      font-size: 1.125rem;
+      color: var(--muted-fg);
+      margin-bottom: 2rem;
+      max-width: 32rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ── Footer ──────────────────────────────────────────── */
+    .footer {
+      position: relative;
+      z-index: 10;
+      padding: 3rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    @media (min-width: 768px) { .footer { padding: 3rem 3rem; } }
+    @media (min-width: 1024px) { .footer { padding: 3rem 5rem; } }
+
+    .footer-inner {
+      max-width: 80rem;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .footer-inner { flex-direction: row; justify-content: space-between; }
+    }
+
+    .footer-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-logo .icon {
+      width: 2rem;
+      height: 2rem;
+      border-radius: var(--radius);
+      background: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .footer-logo .icon svg { width: 1rem; height: 1rem; color: var(--primary-fg); }
+    .footer-logo .text {
+      font-size: 1.125rem;
+      font-weight: 700;
+    }
+    .footer-logo .text .accent { color: var(--primary); }
+
+    .footer-attr {
+      font-size: 0.875rem;
+      color: var(--muted-fg);
+      text-align: center;
+    }
+    .footer-attr .accent { color: var(--primary); font-weight: 500; }
+
+    .footer-links a {
+      color: var(--muted-fg);
+      transition: color 0.3s ease;
+    }
+    .footer-links a:hover { color: var(--primary); }
+    .footer-links svg { width: 1.25rem; height: 1.25rem; }
+
+    /* ── Utility ─────────────────────────────────────────── */
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background orbs -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="#" class="logo">
+      <div class="logo-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+      </div>
+      <span class="logo-text">CODE<span class="accent">dojo</span></span>
+    </a>
+    <a href="https://github.com/Cause-of-a-Kind/code-dojo-core" target="_blank" rel="noopener noreferrer" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+      GitHub
+    </a>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <!-- Floating code snippets -->
+    <div class="code-snippet snippet-1">
+      <div class="pill" style="background: #ff6b3520; border: 2px solid #ff6b35; box-shadow: 0 0 20px #ff6b3540, 0 0 40px #ff6b3520;">
+        <span style="color: #ff6b35;">for()</span>
+        <div class="slice-line" style="background: #ff6b35; box-shadow: 0 0 10px #ff6b35;"></div>
+      </div>
+    </div>
+    <div class="code-snippet snippet-2">
+      <div class="pill" style="background: #00ff8820; border: 2px solid #00ff88; box-shadow: 0 0 20px #00ff8840, 0 0 40px #00ff8820;">
+        <span style="color: #00ff88;">async</span>
+      </div>
+    </div>
+    <div class="code-snippet snippet-3">
+      <div class="pill" style="background: #ff444420; border: 2px solid #ff4444; box-shadow: 0 0 20px #ff444440, 0 0 40px #ff444420;">
+        <span style="color: #ff4444;">=&gt;</span>
+        <div class="slice-line" style="background: #ff4444; box-shadow: 0 0 10px #ff4444;"></div>
+      </div>
+    </div>
+    <div class="code-snippet snippet-4">
+      <div class="pill" style="background: #ffd70020; border: 2px solid #ffd700; box-shadow: 0 0 20px #ffd70040, 0 0 40px #ffd70020;">
+        <span style="color: #ffd700;">const</span>
+      </div>
+    </div>
+    <div class="code-snippet snippet-5">
+      <div class="pill" style="background: #00ff8820; border: 2px solid #00ff88; box-shadow: 0 0 20px #00ff8840, 0 0 40px #00ff8820;">
+        <span style="color: #00ff88;">[ ]</span>
+        <div class="slice-line" style="background: #00ff88; box-shadow: 0 0 10px #00ff88;"></div>
+      </div>
+    </div>
+    <div class="code-snippet snippet-6">
+      <div class="pill" style="background: #ff6b3520; border: 2px solid #ff6b35; box-shadow: 0 0 20px #ff6b3540, 0 0 40px #ff6b3520;">
+        <span style="color: #ff6b35;">{ }</span>
+      </div>
+    </div>
+
+    <!-- Slash effects -->
+    <div class="slash-effect slash-1">
+      <svg width="120" height="40" viewBox="0 0 120 40">
+        <path class="slash-path" d="M0 20 Q30 5 60 20 Q90 35 120 20" stroke="#ff6b35" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle class="sparkle-1" cx="60" cy="20" r="3" fill="#ff6b35"/>
+        <circle class="sparkle-2" cx="90" cy="25" r="2" fill="#ffffff"/>
+      </svg>
+    </div>
+    <div class="slash-effect slash-2">
+      <svg width="120" height="40" viewBox="0 0 120 40">
+        <path class="slash-path" d="M0 20 Q30 5 60 20 Q90 35 120 20" stroke="#00ff88" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle class="sparkle-1" cx="60" cy="20" r="3" fill="#00ff88"/>
+        <circle class="sparkle-2" cx="90" cy="25" r="2" fill="#ffffff"/>
+      </svg>
+    </div>
+    <div class="slash-effect slash-3">
+      <svg width="120" height="40" viewBox="0 0 120 40">
+        <path class="slash-path" d="M0 20 Q30 5 60 20 Q90 35 120 20" stroke="#ff4444" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <circle class="sparkle-1" cx="60" cy="20" r="3" fill="#ff4444"/>
+        <circle class="sparkle-2" cx="90" cy="25" r="2" fill="#ffffff"/>
+      </svg>
+    </div>
+
+    <!-- Hero content -->
+    <div class="hero-inner">
+      <div class="hero-content">
+        <span class="hero-badge">By the CTO of Cause of a Kind</span>
+        <h1>
+          <span>Slash Through</span><br>
+          <span class="gradient">Code Challenges</span>
+        </h1>
+        <p class="hero-desc">
+          A new way to learn coding and sharpen your skills. Attack problems like a ninja, slice through complexity, and become a coding master.
+        </p>
+        <div class="hero-cta">
+          <a href="https://github.com/Cause-of-a-Kind/code-dojo-core" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-hero">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+            View on GitHub
+          </a>
+        </div>
+      </div>
+
+      <!-- Ninja character -->
+      <div class="hero-ninja">
+        <div class="ninja-wrapper">
+          <svg viewBox="0 0 200 200">
+            <!-- Ninja Body -->
+            <ellipse cx="100" cy="130" rx="45" ry="50" fill="#1a1a2e"/>
+            <!-- Ninja Head -->
+            <circle cx="100" cy="70" r="40" fill="#1a1a2e"/>
+            <!-- Ninja Headband -->
+            <rect x="55" y="60" width="90" height="12" rx="2" fill="#ff4444"/>
+            <path d="M145 66 L165 50 L160 70 L145 66" fill="#ff4444"/>
+            <path d="M145 66 L170 75 L155 85 L145 66" fill="#cc3333"/>
+            <!-- Eyes - Glowing -->
+            <ellipse cx="85" cy="68" rx="8" ry="4" fill="#ffffff"/>
+            <ellipse cx="115" cy="68" rx="8" ry="4" fill="#ffffff"/>
+            <ellipse cx="85" cy="68" rx="4" ry="2" fill="#00ff88"/>
+            <ellipse cx="115" cy="68" rx="4" ry="2" fill="#00ff88"/>
+            <!-- Arms -->
+            <ellipse cx="55" cy="120" rx="12" ry="20" fill="#1a1a2e"/>
+            <ellipse cx="145" cy="120" rx="12" ry="20" fill="#1a1a2e"/>
+            <!-- Katana -->
+            <g class="ninja-katana">
+              <rect x="155" y="80" width="4" height="60" rx="2" fill="#8b4513"/>
+              <rect x="150" y="75" width="14" height="8" rx="1" fill="#ffd700"/>
+              <rect x="154" y="20" width="6" height="55" rx="1" fill="#e8e8e8"/>
+              <polygon points="157,20 160,5 163,20" fill="#e8e8e8"/>
+            </g>
+            <!-- Code symbols floating around -->
+            <text class="ninja-code-1" x="30" y="50" fill="#ff6b35" font-size="14" font-family="monospace" font-weight="bold">{ }</text>
+            <text class="ninja-code-2" x="160" y="40" fill="#00ff88" font-size="12" font-family="monospace" font-weight="bold">&lt; /&gt;</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="scroll-indicator">
+      <div class="scroll-pill">
+        <div class="scroll-dot"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats reveal">
+    <div class="stats-grid">
+      <div class="stat-card" style="--hover-color: #ffd700;" onmouseenter="this.style.borderColor='#ffd700'" onmouseleave="this.style.borderColor=''">
+        <div class="stat-value" style="color: #ffd700;">8</div>
+        <div class="stat-label">Belt Levels</div>
+      </div>
+      <div class="stat-card" onmouseenter="this.style.borderColor='#00ff88'" onmouseleave="this.style.borderColor=''">
+        <div class="stat-value" style="color: #00ff88;">AI</div>
+        <div class="stat-label">Adaptive Sensei</div>
+      </div>
+      <div class="stat-card" onmouseenter="this.style.borderColor='#ff6b35'" onmouseleave="this.style.borderColor=''">
+        <div class="stat-value" style="color: #ff6b35;">&infin;</div>
+        <div class="stat-label">Fresh Problems</div>
+      </div>
+      <div class="stat-card" onmouseenter="this.style.borderColor='#ff4444'" onmouseleave="this.style.borderColor=''">
+        <div class="stat-value" style="color: #ff4444;">Any</div>
+        <div class="stat-label">Language or Skill</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features">
+    <div class="features-header reveal">
+      <h2>Train Like a <span class="accent">Ninja</span></h2>
+      <p>Master the art of coding with our unique dojo-style approach to learning</p>
+    </div>
+
+    <div class="features-grid">
+      <!-- Slice Through Problems -->
+      <div class="feature-card reveal">
+        <div class="glow" style="background: #ff6b3530;"></div>
+        <div class="card-inner">
+          <div class="feature-icon" style="background: #ff6b3520; color: #ff6b35;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+          </div>
+          <h3>Slice Through Problems</h3>
+          <p>Attack coding challenges with precision. Each problem you solve is another code block sliced!</p>
+        </div>
+      </div>
+
+      <!-- Lightning Fast Learning -->
+      <div class="feature-card reveal">
+        <div class="glow" style="background: #ffd70030;"></div>
+        <div class="card-inner">
+          <div class="feature-icon" style="background: #ffd70020; color: #ffd700;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          </div>
+          <h3>Lightning Fast Learning</h3>
+          <p>Quick, bite-sized challenges that fit your schedule. Level up in minutes, not hours.</p>
+        </div>
+      </div>
+
+      <!-- Skill Targeting -->
+      <div class="feature-card reveal">
+        <div class="glow" style="background: #ff444430;"></div>
+        <div class="card-inner">
+          <div class="feature-icon" style="background: #ff444420; color: #ff4444;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <h3>Skill Targeting</h3>
+          <p>Spaced repetition and smart scheduling surface exactly what you need to practice, right when you need it.</p>
+        </div>
+      </div>
+
+      <!-- Earn Your Belt -->
+      <div class="feature-card reveal">
+        <div class="glow" style="background: #00ff8830;"></div>
+        <div class="card-inner">
+          <div class="feature-icon" style="background: #00ff8820; color: #00ff88;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          </div>
+          <h3>Earn Your Belt</h3>
+          <p>Progress through 8 belts from white to black as you demonstrate sustained mastery across varied contexts.</p>
+        </div>
+      </div>
+
+      <!-- AI Observes Your Patterns -->
+      <div class="feature-card reveal">
+        <div class="glow" style="background: #ff6b3530;"></div>
+        <div class="card-inner">
+          <div class="feature-icon" style="background: #ff6b3520; color: #ff6b35;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <h3>AI Observes Your Patterns</h3>
+          <p>Your sensei watches how you solve problems — noticing anti-patterns, missed opportunities, and breakthroughs to adapt your training.</p>
+        </div>
+      </div>
+
+      <!-- Real-World Kata -->
+      <div class="feature-card reveal">
+        <div class="glow" style="background: #00ff8830;"></div>
+        <div class="card-inner">
+          <div class="feature-icon" style="background: #00ff8820; color: #00ff88;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          </div>
+          <h3>Real-World Kata</h3>
+          <p>Practice with fresh, realistic challenges that maintain your edge. Like a martial artist's daily kata — mastery is a lifelong pursuit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="cta-box reveal">
+      <div class="cta-slash cta-slash-1"></div>
+      <div class="cta-slash cta-slash-2"></div>
+      <div class="cta-slash cta-slash-3"></div>
+      <div class="cta-slash cta-slash-4"></div>
+
+      <div class="cta-sword-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+      </div>
+
+      <h2>Ready to Begin Your Training?</h2>
+      <p>Join the dojo and start slicing through code challenges today. Open source and free forever.</p>
+
+      <a href="https://github.com/Cause-of-a-Kind/code-dojo-core" target="_blank" rel="noopener noreferrer" class="btn btn-primary btn-cta">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+        Start Training on GitHub
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
+        </div>
+        <span class="text">CODE<span class="accent">dojo</span></span>
+      </div>
+
+      <p class="footer-attr">
+        Created by the CTO of <span class="accent">Cause of a Kind</span>
+      </p>
+
+      <div class="footer-links">
+        <a href="https://github.com/Cause-of-a-Kind/code-dojo-core" target="_blank" rel="noopener noreferrer">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          <span class="sr-only">GitHub</span>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- IntersectionObserver for scroll animations -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.reveal').forEach(function(el) {
+        observer.observe(el);
+      });
+    });
+  </script>
+</body>
+</html>
